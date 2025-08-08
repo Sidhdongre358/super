@@ -53,7 +53,13 @@ cd super
 npm install
 
 # Start development server
-npm start
+npm run dev
+
+# Start build
+npm run build
+
+# Start testing
+npm run test
 
 # Build image
 docker build -t react-dashboard .
