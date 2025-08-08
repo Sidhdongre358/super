@@ -1,0 +1,54 @@
+name: Integration
+# This workflow is triggered on pushes and pull requests to the main branch.
+# It runs tests and builds the application using different Node.js versions.
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+# The workflow consists of a single job that runs on the latest Ubuntu environment.
+# It tests the application against multiple Node.js versions (18.x, 20.x, 22.x).
+# It checks out the code, sets up Node.js, installs dependencies, builds the application, and runs tests.
+# The job uses caching for npm dependencies to speed up the workflow.
+# The workflow is defined in the .github/workflows/integration.yml file.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install dependencies
+        run: npm i
+      - name: Build the application
+        run: npm run build
+
+  # Uncomment the following lines to run tests
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install dependencies
+        run: npm i
+      - name: Build the application
+        run: npm run test
