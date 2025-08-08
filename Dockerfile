@@ -2,16 +2,19 @@
 FROM node:20-alpine AS build  
 # Use lightweight Node.js for building
 
-WORKDIR /app  # Set working directory inside container
+WORKDIR /app  
+# Set working directory inside container
 
 COPY package*.json ./  
 # Copy package.json and package-lock.json
-RUN npm ci  # Install all dependencies (including devDependencies) for Vite build
+RUN npm ci  
+# Install all dependencies (including devDependencies) for Vite build
 
 COPY . . 
 # Copy rest of the application source code
 
-RUN npm run build  # Build the Vite React app (outputs to /app/dist)
+RUN npm run build  
+# Build the Vite React app (outputs to /app/dist)
 
 # ---------- Production Stage ----------
 FROM nginx:alpine  
@@ -26,4 +29,5 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80  
 # Expose port 80 for HTTP traffic
 
-CMD ["nginx", "-g", "daemon off;"]  # Start Nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]  
+# Start Nginx in foreground
