@@ -1,27 +1,29 @@
-# Use official Node.js image as the base
-FROM node:20-alpine
+# ---------- Build Stage ----------
+FROM node:20-alpine AS build  
+# Use lightweight Node.js for building
 
-# Set working directory
-WORKDIR /app
+WORKDIR /app  # Set working directory inside container
 
+COPY package*.json ./  
 # Copy package.json and package-lock.json
-COPY package*.json ./
+RUN npm ci  # Install all dependencies (including devDependencies) for Vite build
 
-# Install dependencies
-RUN npm install --production
+COPY . . 
+# Copy rest of the application source code
 
-# Copy the rest of the application code
-COPY . .
+RUN npm run build  # Build the Vite React app (outputs to /app/dist)
 
-# Build the React app
-RUN npm run build
+# ---------- Production Stage ----------
+FROM nginx:alpine  
+# Use lightweight Nginx to serve static files
 
-# Use nginx to serve the build
-FROM nginx:alpine
-COPY --from=0 /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html  
+# Copy build output to Nginx HTML folder
 
-# Expose port 80
-EXPOSE 80
+COPY nginx.conf /etc/nginx/conf.d/default.conf 
+# Use custom Nginx config for React Router
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80  
+# Expose port 80 for HTTP traffic
+
+CMD ["nginx", "-g", "daemon off;"]  # Start Nginx in foreground
