@@ -46,7 +46,7 @@ Developer Commit → GitHub Actions → Docker Build → Push to AWS EC2 → Ngi
 
 
 # Clone repository
-git clone https://github.com/<your-username>/<your-repo>.git
+git clone https://github.com/Sidhdongre358/super.git
 cd <your-repo>
 
 # Install dependencies
@@ -54,3 +54,9 @@ npm install
 
 # Start development server
 npm start
+
+# Build image
+docker build -t react-dashboard .
+
+# Run container
+docker run -p 3000:3000 react-dashboard
