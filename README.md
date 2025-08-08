@@ -47,7 +47,7 @@ Developer Commit → GitHub Actions → Docker Build → Push to AWS EC2 → Ngi
 
 # Clone repository
 git clone https://github.com/Sidhdongre358/super.git
-cd <your-repo>
+cd super
 
 # Install dependencies
 npm install
