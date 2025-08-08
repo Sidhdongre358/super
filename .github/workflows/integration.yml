@@ -1,54 +1,47 @@
-name: Integration
-# This workflow is triggered on pushes and pull requests to the main branch.
-# It runs tests and builds the application using different Node.js versions.
+name: Integration # Name of the workflow
 
+# Trigger workflow on push or pull request events to the main branch
 on:
   push:
-    branches: ["main"]
+    branches: ["main"] # Run when code is pushed to main
   pull_request:
-    branches: ["main"]
+    branches: ["main"] # Run when a PR targets main
 
-# The workflow consists of a single job that runs on the latest Ubuntu environment.
-# It tests the application against multiple Node.js versions (18.x, 20.x, 22.x).
-# It checks out the code, sets up Node.js, installs dependencies, builds the application, and runs tests.
-# The job uses caching for npm dependencies to speed up the workflow.
-# The workflow is defined in the .github/workflows/integration.yml file.
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner for the job
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x] # Test against multiple Node.js versions
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # Checkout the repository code
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4 # Set up the specified Node.js version
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          node-version: ${{ matrix.node-version }} # Use version from the matrix
+          cache: "npm" # Cache npm dependencies for faster builds
       - name: Install dependencies
-        run: npm i
+        run: npm i # Install required npm packages
       - name: Build the application
-        run: npm run build
+        run: npm run build # Compile or bundle the application
 
-  # Uncomment the following lines to run tests
   unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner for tests
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x] # Run tests against multiple Node.js versions
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # Checkout the repository code
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4 # Set up the specified Node.js version
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          node-version: ${{ matrix.node-version }} # Use version from the matrix
+          cache: "npm" # Cache npm dependencies for faster builds
       - name: Install dependencies
-        run: npm i
-      - name: Build the application
-        run: npm run test
+        run: npm i # Install required npm packages
+      - name: Run unit tests
+        run: npm run test # Execute the test suite
